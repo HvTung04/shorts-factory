@@ -1,0 +1,15 @@
+max_source_time: 36000
+time_tolerance_pct: 0.1
+available_sources:
+  - name: "youtube"
+    url: "https://www.youtube.com/"
+    search_url: "https://www.youtube.com/results?search_query={query}"
+    video_url: "https://www.youtube.com/watch?v={video_id}"
+  - name: "tiktok"
+    url: "https://www.tiktok.com/"
+    search_url: "https://www.tiktok.com/search?q={query}"
+    video_url: "https://www.tiktok.com/@{username}/video/{video_id}"
+max_single_video_duration: 600
+min_single_video_duration: 5
+min_resolution: 480
+max_resolution: 1080
