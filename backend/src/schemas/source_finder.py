@@ -3,10 +3,6 @@ from typing import Optional, List, Union, Dict, Any, Literal
 from enum import Enum
 from datetime import datetime
 
-from utils.config_loader import load_config
-
-config = load_config("configs/source_finder_config.yaml")
-
 # -------------------------
 # Enums
 # -------------------------
