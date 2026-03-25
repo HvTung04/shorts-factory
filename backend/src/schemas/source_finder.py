@@ -1,7 +1,28 @@
-from pydantic import BaseModel
-from typing import Optional, List, Union, Dict, Any, Literal
+from pydantic import BaseModel, BeforeValidator
+from typing import Optional, List, Union, Dict, Any, Literal, Annotated
 from enum import Enum
 from datetime import datetime
+import re
+
+# -------------------------
+# Validators
+# -------------------------
+YOUTUBE_ID_REGEX = re.compile(r"A-Za-z0-9_-]{10}[AEIMQUYcgkosw048]")
+YOUTUBE_PATTERNS = [
+    r"https?://(www\.)?youtube\.com/watch\?v=([^&]+)",
+    r"https?://youtu\.be/([^?&]+)",
+    r"https?://(www\.)?youtube\.com/embed/([^?&]+)",
+    r"https?://(www\.)?youtube\.com/shorts/([^?&]+)"
+]
+
+def validate_and_normalize_url(value: str) -> str:
+    for pattern in YOUTUBE_PATTERNS:
+        match = re.match(pattern, value)
+        if match:
+            video_id = match.group(2) if len(match.groups()) > 1 else match.group(1)
+            if re.match(YOUTUBE_ID_REGEX, video_id):
+                return f"https://www.youtube.com/watch?v={video_id}"
+    raise ValueError(f"Invalid YouTube URL: {value}")
 
 # -------------------------
 # Enums
@@ -22,7 +43,7 @@ class VideoResult(BaseModel):
     Represents a video result from a source finder.
     """
     id: str
-    url: str
+    url: Annotated[str, BeforeValidator(validate_and_normalize_url)]
     source: Source
     title: str
     duration_sec: int
